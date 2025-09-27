@@ -1,0 +1,40 @@
+package com.fsole.bh.infrastructure.adapter.in.rest;
+import com.fsole.bh.domain.model.Post;
+import com.fsole.bh.domain.port.PostService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
+
+@RestController
+@RequiredArgsConstructor
+@Slf4j
+public class PostController {
+    private final PostService postService;
+
+    @GetMapping
+    public ResponseEntity<List<Post>> getAllPosts() {
+        log.info("getAllPosts - request received");
+        return ResponseEntity.ok(postService.getAllPosts());
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+        log.info("getPostById - request received with id: '{}'", id);
+        return ResponseEntity.ok(postService.getPostById(id));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<String> deletePostById(@PathVariable Long id) {
+        log.info("deletePostById - request received with id: '{}'", id);
+        postService.deletePostById(id);
+        // should return 204 by RFC 7231 on successfully deletions,
+        // but I'm returning 200 with this message for more clarity
+        return ResponseEntity.ok("Post id " + id + " deleted successfully");
+    }
+}
