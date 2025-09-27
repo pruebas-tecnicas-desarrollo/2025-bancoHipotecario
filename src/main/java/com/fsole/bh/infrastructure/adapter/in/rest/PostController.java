@@ -30,11 +30,10 @@ public class PostController {
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<String> deletePostById(@PathVariable Long id) {
+    public ResponseEntity<Void> deletePostById(@PathVariable Long id) {
         log.info("deletePostById - request received with id: '{}'", id);
         postService.deletePostById(id);
-        // should return 204 by RFC 7231 on successfully deletions,
-        // but I'm returning 200 with this message for more clarity
-        return ResponseEntity.ok("Post id " + id + " deleted successfully");
+        // changed and returning 204 No Content as required in 2.c
+        return ResponseEntity.noContent().build();
     }
 }
