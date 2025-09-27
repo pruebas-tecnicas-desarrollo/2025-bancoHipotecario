@@ -1,6 +1,6 @@
 package com.fsole.bh.infrastructure.adapter.in.rest;
 import com.fsole.bh.domain.model.Post;
-import com.fsole.bh.domain.port.PostService;
+import com.fsole.bh.domain.port.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;

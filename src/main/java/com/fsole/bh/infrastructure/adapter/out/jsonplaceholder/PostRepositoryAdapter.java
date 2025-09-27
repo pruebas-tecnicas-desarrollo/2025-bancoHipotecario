@@ -1,7 +1,7 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
 import com.fsole.bh.domain.model.Post;
-import com.fsole.bh.domain.port.PostRepository;
+import com.fsole.bh.domain.port.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;

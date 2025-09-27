@@ -1,8 +1,8 @@
 package com.fsole.bh.application.service;
 
 import com.fsole.bh.domain.model.Post;
-import com.fsole.bh.domain.port.PostRepository;
-import com.fsole.bh.domain.port.PostService;
+import com.fsole.bh.domain.port.post.PostRepository;
+import com.fsole.bh.domain.port.post.PostService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
