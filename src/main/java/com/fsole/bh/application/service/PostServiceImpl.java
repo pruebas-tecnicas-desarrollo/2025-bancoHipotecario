@@ -26,11 +26,16 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAllPosts() {
-        log.info("getAllPosts - going to repository adapters to fetch all posts, users and comments...");
+        log.debug("going to post repository adapter to fetch all posts...");
         List<Post> posts = postRepository.getAllPosts();
+
+        log.debug("going to user repository adapter to fetch all posts authors...");
         List<User> users = userRepository.getAllUsers();
+
+        log.debug("going to comments repository adapter to fetch all posts comments...");
         List<Comment> comments = commentRepository.getAllComments();
 
+        log.info("returning merged data...");
         return postMapper.mapAllPosts(posts, users, comments);
     }
 
@@ -41,9 +46,16 @@ public class PostServiceImpl implements PostService {
             throw new InvalidRequestException();
         }
         log.info("getPostById - going to repository adapter to fetch post, its author and comments...");
+        log.debug("going to post repository adapter to fetch post...");
         Post post = postRepository.getPostById(id);
+
+        log.debug("going to user repository adapter to fetch post author...");
         User user = userRepository.getUserById(post.getUserId());
+
+        log.debug("going to comments repository adapter to fetch all post comments...");
         List<Comment> comments = commentRepository.getAllCommentsByPostId(post.getId());
+
+        log.info("returning merged data...");
         return postMapper.mapPost(post, user, comments);
     }
 
@@ -54,6 +66,7 @@ public class PostServiceImpl implements PostService {
             throw new InvalidRequestException();
         }
         log.info("deletePostById - going to repository adapter to delete post...");
+        log.debug("going to post repository adapter to delete post...");
         postRepository.deletePostById(id);
     }
 }
