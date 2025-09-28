@@ -31,7 +31,6 @@ public class PostController {
     public ResponseEntity<Void> deletePostById(@PathVariable Long id) {
         log.info("deletePostById - request received with post id: '{}'", id);
         postService.deletePostById(id);
-        // changed and returning 204 No Content as required in 2.c
         return ResponseEntity.noContent().build();
     }
 }
