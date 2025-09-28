@@ -28,7 +28,7 @@ public class UserRepositoryAdapter implements UserRepository {
 
         try{
             User[] users = restTemplate.getForObject(BASE_URL, User[].class);
-            log.debug("getPostById - all users were fetched successfully");
+            log.debug("getAllUsers - all users were fetched successfully");
             return Arrays.asList(users);
         } catch (ResourceAccessException ex) {
             log.error("getAllUsers - timeout while trying to fetch all users");
@@ -43,13 +43,13 @@ public class UserRepositoryAdapter implements UserRepository {
 
         try {
             User user = restTemplate.getForObject(url, User.class);
-            log.debug("getPostById - the required user was fetched successfully");
+            log.debug("getUserById - the required user was fetched successfully");
             return user;
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("deletePostById - the required user was not found");
+            log.error("getUserById - the required user was not found");
             throw new UserNotFoundException(id);
         } catch (ResourceAccessException ex) {
-            log.error("deletePostById - timeout while trying to fetch the required user");
+            log.error("getUserById - timeout while trying to fetch the required user");
             throw new ExternalServiceTimeoutException(url);
         }
     }

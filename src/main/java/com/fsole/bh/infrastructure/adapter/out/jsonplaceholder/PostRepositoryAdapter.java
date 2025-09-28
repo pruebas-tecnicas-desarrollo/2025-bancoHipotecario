@@ -49,10 +49,10 @@ public class PostRepositoryAdapter implements PostRepository {
             log.debug("getPostById - the required post was fetched successfully");
             return post;
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("deletePostById - the required post was not found");
+            log.error("getPostById - the required post was not found");
             throw new PostNotFoundException(id);
         } catch (ResourceAccessException ex) {
-            log.error("deletePostById - timeout while trying to fetch the required post");
+            log.error("getPostById - timeout while trying to fetch the required post");
             throw new ExternalServiceTimeoutException(url);
         }
     }
