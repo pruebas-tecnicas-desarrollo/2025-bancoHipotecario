@@ -26,14 +26,14 @@ public class PostRepositoryAdapter implements PostRepository {
     @Override
     @Cacheable(value = "posts", key = "'all'")
     public List<Post> getAllPosts() {
-        log.info("getAllPosts - fetching all posts...");
+        log.info("trying to fetch all posts...");
 
         try{
             Post[] posts = restTemplate.getForObject(BASE_URL, Post[].class);
-            log.debug("getAllPosts - all posts were fetched successfully");
+            log.debug("all posts were fetched successfully");
             return Arrays.asList(posts);
         } catch (ResourceAccessException ex) {
-            log.error("getAllPosts - timeout while trying to fetch all posts");
+            log.error("timeout while trying to fetch all posts");
             throw new ExternalServiceTimeoutException(BASE_URL);
         }
     }
@@ -41,19 +41,19 @@ public class PostRepositoryAdapter implements PostRepository {
     @Override
     @Cacheable(value = "posts", key = "#id")
     public Post getPostById(Long id) {
-        log.info("getPostById - fetching post...");
+        log.info("trying to fetch post...");
         String url = BASE_URL + id;
 
         try {
             Post post = restTemplate.getForObject(url, Post.class);
-            log.debug("getPostById - the required post was fetched successfully");
+            log.debug("the required post was fetched successfully");
             return post;
         } catch (HttpClientErrorException.NotFound ex) {
             String error = "the required post was not found";
-            log.error("getPostById - {}", error);
+            log.error(error);
             throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
-            log.error("getPostById - timeout while trying to fetch the required post");
+            log.error("timeout while trying to fetch the required post");
             throw new ExternalServiceTimeoutException(url);
         }
     }
@@ -61,18 +61,18 @@ public class PostRepositoryAdapter implements PostRepository {
     @Override
     @CacheEvict(value = "posts", key = "#id")
     public void deletePostById(Long id) {
-        log.info("deletePostById - deleting post...");
+        log.info("trying to delete post...");
         String url = BASE_URL + id;
 
         try {
             restTemplate.delete(url, Post.class);
-            log.debug("deletePostById - the required post was deleted successfully");
+            log.debug("the required post was deleted successfully");
         } catch (HttpClientErrorException.NotFound ex) {
             String error = "the required post was not found";
-            log.error("deletePostById - {}", error);
+            log.error(error);
             throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
-            log.error("deletePostById - timeout while trying to delete the required post");
+            log.error("timeout while trying to delete the required post");
             throw new ExternalServiceTimeoutException(url);
         }
     }
