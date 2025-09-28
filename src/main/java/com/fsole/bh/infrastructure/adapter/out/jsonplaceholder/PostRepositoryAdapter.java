@@ -5,6 +5,8 @@ import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.port.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +22,7 @@ public class PostRepositoryAdapter implements PostRepository {
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/posts/";
 
     @Override
+    @Cacheable(value = "posts", key = "'all'")
     public List<Post> getAllPosts() {
         log.info("getAllPosts - fetching all posts");
         Post[] posts = restTemplate.getForObject(BASE_URL, Post[].class);
@@ -27,6 +30,7 @@ public class PostRepositoryAdapter implements PostRepository {
     }
 
     @Override
+    @Cacheable(value = "posts", key = "#id")
     public Post getPostById(Long id) {
         log.info("getPostById - fetching post");
         String url = BASE_URL + id;
@@ -40,6 +44,7 @@ public class PostRepositoryAdapter implements PostRepository {
     }
 
     @Override
+    @CacheEvict(value = "posts", key = "#id")
     public void deletePostById(Long id) {
         log.info("deletePostById - deleting post");
         String url = BASE_URL + id;
