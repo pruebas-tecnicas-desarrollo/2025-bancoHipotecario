@@ -23,34 +23,34 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public List<User> getAllUsers() {
-        log.info("getAllUsers - fetching all users...");
+        log.info("trying to fetch all users...");
 
         try{
             User[] users = restTemplate.getForObject(BASE_URL, User[].class);
-            log.debug("getAllUsers - all users were fetched successfully");
+            log.debug("all users were fetched successfully");
             return Arrays.asList(users);
         } catch (ResourceAccessException ex) {
-            log.error("getAllUsers - timeout while trying to fetch all users");
+            log.error("timeout while trying to fetch all users");
             throw new ExternalServiceTimeoutException(BASE_URL);
         }
     }
 
     @Override
     public User getUserById(Long id) {
-        log.info("getUserById - fetching user id '{}'...", id);
+        log.info("trying to fetch user id '{}'...", id);
         String url = BASE_URL + id;
 
         try {
             User user = restTemplate.getForObject(url, User.class);
-            log.debug("getUserById - the required user was fetched successfully");
+            log.debug("the required user was fetched successfully");
             return user;
         } catch (HttpClientErrorException.NotFound ex) {
             // this should never happen since userId comes from the post author, but added for safety
             String error = "the required user was not found";
-            log.error("getUserById - {}", error);
+            log.error(error);
             throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
-            log.error("getUserById - timeout while trying to fetch the required user");
+            log.error("timeout while trying to fetch the required user");
             throw new ExternalServiceTimeoutException(url);
         }
     }
