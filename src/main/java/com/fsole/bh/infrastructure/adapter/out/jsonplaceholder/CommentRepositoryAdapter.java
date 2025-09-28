@@ -5,6 +5,7 @@ import com.fsole.bh.domain.model.Comment;
 import com.fsole.bh.domain.port.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
@@ -20,6 +21,7 @@ public class CommentRepositoryAdapter implements CommentRepository {
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/comments/";
 
     @Override
+    @Cacheable(value = "comments", key = "'all'")
     public List<Comment> getAllComments() {
         log.info("getAllComments - fetching all comments in all posts...");
 
@@ -34,6 +36,7 @@ public class CommentRepositoryAdapter implements CommentRepository {
     }
 
     @Override
+    @Cacheable(value = "comments", key = "#postId")
     public List<Comment> getAllCommentsByPostId(Long postId) {
         log.info("getAllCommentsByPostId - fetching all comments in post id '{}'...", postId);
         String url = BASE_URL + "?postId=" + postId;
