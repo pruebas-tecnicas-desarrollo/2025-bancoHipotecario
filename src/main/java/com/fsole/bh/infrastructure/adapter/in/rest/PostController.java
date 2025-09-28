@@ -28,7 +28,9 @@ public class PostController {
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         log.info("getAllPosts - request received");
-        return ResponseEntity.ok(postService.getAllPosts());
+        ResponseEntity<List<Post>> response = ResponseEntity.ok(postService.getAllPosts());
+        log.info("getAllPosts - request finished");
+        return response;
     }
 
     @Operation(summary = "Get post by ID", description = "Fetch a single post by its unique identifier, including author and comments")
@@ -41,7 +43,9 @@ public class PostController {
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
         log.info("getPostById - request received with post id: '{}'", id);
-        return ResponseEntity.ok(postService.getPostById(id));
+        ResponseEntity<Post> response = ResponseEntity.ok(postService.getPostById(id));
+        log.info("getPostById - request finished");
+        return response;
     }
 
     @Operation(summary = "Delete post by ID", description = "Delete a post by its unique identifier")
@@ -56,6 +60,8 @@ public class PostController {
     public ResponseEntity<Void> deletePostById(@PathVariable Long id) {
         log.info("deletePostById - request received with post id: '{}'", id);
         postService.deletePostById(id);
-        return ResponseEntity.noContent().build();
+        ResponseEntity<Void> response = ResponseEntity.noContent().build();
+        log.info("deletePostById - request finished");
+        return response;
     }
 }
