@@ -21,7 +21,10 @@ public class PostController {
     private final PostService postService;
 
     @Operation(summary = "Get all posts", description = "Fetch all posts with their authors and comments")
-    @ApiResponse(responseCode = "200", description = "List of posts returned successfully")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "List of posts returned successfully"),
+            @ApiResponse(responseCode = "504", description = "Timeout", content = @Content)
+    })
     @GetMapping
     public ResponseEntity<List<Post>> getAllPosts() {
         log.info("getAllPosts - request received");
@@ -32,7 +35,8 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Post found"),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Timeout", content = @Content)
     })
     @GetMapping("/{id}")
     public ResponseEntity<Post> getPostById(@PathVariable Long id) {
@@ -44,7 +48,8 @@ public class PostController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "204", description = "Post deleted successfully"),
             @ApiResponse(responseCode = "400", description = "Invalid ID supplied", content = @Content),
-            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content)
+            @ApiResponse(responseCode = "404", description = "Post not found", content = @Content),
+            @ApiResponse(responseCode = "504", description = "Timeout", content = @Content)
     })
 
     @DeleteMapping("/{id}")
