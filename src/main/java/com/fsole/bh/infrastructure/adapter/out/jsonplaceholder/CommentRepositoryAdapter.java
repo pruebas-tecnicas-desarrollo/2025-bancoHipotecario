@@ -2,7 +2,6 @@ package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
 import com.fsole.bh.domain.exception.ExternalServiceTimeoutException;
 import com.fsole.bh.domain.model.Comment;
-import com.fsole.bh.domain.model.User;
 import com.fsole.bh.domain.port.comment.CommentRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
