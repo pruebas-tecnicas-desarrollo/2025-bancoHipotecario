@@ -1,5 +1,6 @@
 package com.fsole.bh.application.service;
 
+import com.fsole.bh.domain.exception.InvalidRequestException;
 import com.fsole.bh.domain.model.Comment;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.model.User;
@@ -25,7 +26,7 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public List<Post> getAllPosts() {
-        log.info("getAllPosts - going to repository adapters to fetch all posts, users and comments");
+        log.info("getAllPosts - going to repository adapters to fetch all posts, users and comments...");
         List<Post> posts = postRepository.getAllPosts();
         List<User> users = userRepository.getAllUsers();
         List<Comment> comments = commentRepository.getAllComments();
@@ -35,7 +36,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostById(Long id) {
-        log.info("getPostById - going to repository adapter to fetch post, its author and comments");
+        if (id <= 0) {
+            log.warn("getPostById - invalid id received: {}", id);
+            throw new InvalidRequestException();
+        }
+        log.info("getPostById - going to repository adapter to fetch post, its author and comments...");
         Post post = postRepository.getPostById(id);
         User user = userRepository.getUserById(post.getUserId());
         List<Comment> comments = commentRepository.getAllCommentsByPostId(post.getId());
@@ -44,7 +49,11 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePostById(Long id) {
-        log.info("deletePostById - going to repository adapter to delete post");
+        if (id <= 0) {
+            log.warn("deletePostById - invalid id received: {}", id);
+            throw new InvalidRequestException();
+        }
+        log.info("deletePostById - going to repository adapter to delete post...");
         postRepository.deletePostById(id);
     }
 }
