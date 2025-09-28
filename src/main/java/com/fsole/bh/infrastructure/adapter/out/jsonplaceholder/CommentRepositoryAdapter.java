@@ -27,7 +27,7 @@ public class CommentRepositoryAdapter implements CommentRepository {
 
     @Override
     public List<Comment> getAllCommentsByPostId(Long postId) {
-        log.info("getAllCommentsByPostId - fetching all comments in post id {}", postId);
+        log.info("getAllCommentsByPostId - fetching all comments in post id '{}'", postId);
         String url = BASE_URL + "?postId=" + postId;
         Comment[] comments = restTemplate.getForObject(url, Comment[].class);
         return Arrays.asList(comments);

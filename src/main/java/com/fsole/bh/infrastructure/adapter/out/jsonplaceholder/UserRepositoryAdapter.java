@@ -27,7 +27,7 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public User getUserById(Long id) {
-        log.info("getUserById - fetching user id {}", id);
+        log.info("getUserById - fetching user id '{}'", id);
         String url = BASE_URL + id;
         return restTemplate.getForObject(url, User.class);
     }
