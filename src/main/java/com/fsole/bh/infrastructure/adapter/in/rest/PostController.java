@@ -1,6 +1,8 @@
 package com.fsole.bh.infrastructure.adapter.in.rest;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.port.post.PostService;
+import com.fsole.bh.infrastructure.adapter.in.rest.dto.SuccessResponse;
+import com.fsole.bh.infrastructure.adapter.in.rest.util.ResponseBuilder;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -26,11 +28,11 @@ public class PostController {
             @ApiResponse(responseCode = "504", description = "Timeout", content = @Content)
     })
     @GetMapping
-    public ResponseEntity<List<Post>> getAllPosts() {
+    public ResponseEntity<SuccessResponse<List<Post>>> getAllPosts() {
         log.info("getAllPosts - request received");
-        ResponseEntity<List<Post>> response = ResponseEntity.ok(postService.getAllPosts());
+        List<Post> response = postService.getAllPosts();
         log.info("getAllPosts - request finished");
-        return response;
+        return ResponseEntity.ok(ResponseBuilder.success(response));
     }
 
     @Operation(summary = "Get post by ID", description = "Fetch a single post by its unique identifier, including author and comments")
@@ -41,11 +43,11 @@ public class PostController {
             @ApiResponse(responseCode = "504", description = "Timeout", content = @Content)
     })
     @GetMapping("/{id}")
-    public ResponseEntity<Post> getPostById(@PathVariable Long id) {
+    public ResponseEntity<SuccessResponse<Post>> getPostById(@PathVariable Long id) {
         log.info("getPostById - request received with post id: '{}'", id);
-        ResponseEntity<Post> response = ResponseEntity.ok(postService.getPostById(id));
+        Post response = postService.getPostById(id);
         log.info("getPostById - request finished");
-        return response;
+        return ResponseEntity.ok(ResponseBuilder.success(response));
     }
 
     @Operation(summary = "Delete post by ID", description = "Delete a post by its unique identifier")
