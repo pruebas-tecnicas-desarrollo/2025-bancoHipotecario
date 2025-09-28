@@ -6,6 +6,7 @@ import com.fsole.bh.domain.model.User;
 import com.fsole.bh.domain.port.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -22,6 +23,7 @@ public class UserRepositoryAdapter implements UserRepository {
     private static final String BASE_URL = "https://jsonplaceholder.typicode.com/users/";
 
     @Override
+    @Cacheable(value = "users", key = "'all'")
     public List<User> getAllUsers() {
         log.info("trying to fetch all users...");
 
@@ -36,6 +38,7 @@ public class UserRepositoryAdapter implements UserRepository {
     }
 
     @Override
+    @Cacheable(value = "users", key = "#id")
     public User getUserById(Long id) {
         log.info("trying to fetch user id '{}'...", id);
         String url = BASE_URL + id;
