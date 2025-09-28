@@ -1,5 +1,6 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
+import com.fsole.bh.domain.exception.ExternalServiceTimeoutException;
 import com.fsole.bh.domain.exception.UserNotFoundException;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.model.User;
@@ -8,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
+import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -22,21 +24,33 @@ public class UserRepositoryAdapter implements UserRepository {
 
     @Override
     public List<User> getAllUsers() {
-        log.info("getAllUsers - fetching all users");
-        User[] users = restTemplate.getForObject(BASE_URL, User[].class);
-        return Arrays.asList(users);
+        log.info("getAllUsers - fetching all users...");
+
+        try{
+            User[] users = restTemplate.getForObject(BASE_URL, User[].class);
+            log.debug("getPostById - all users were fetched successfully");
+            return Arrays.asList(users);
+        } catch (ResourceAccessException ex) {
+            log.error("getAllUsers - timeout while trying to fetch all users");
+            throw new ExternalServiceTimeoutException(BASE_URL);
+        }
     }
 
     @Override
     public User getUserById(Long id) {
-        log.info("getUserById - fetching user id '{}'", id);
+        log.info("getUserById - fetching user id '{}'...", id);
         String url = BASE_URL + id;
 
         try {
-            return restTemplate.getForObject(url, User.class);
+            User user = restTemplate.getForObject(url, User.class);
+            log.debug("getPostById - the required user was fetched successfully");
+            return user;
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("User with id {} not found", id);
+            log.error("deletePostById - the required user was not found");
             throw new UserNotFoundException(id);
+        } catch (ResourceAccessException ex) {
+            log.error("deletePostById - timeout while trying to fetch the required user");
+            throw new ExternalServiceTimeoutException(url);
         }
     }
 }
