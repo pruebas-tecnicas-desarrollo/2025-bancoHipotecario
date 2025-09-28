@@ -1,10 +1,12 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
+import com.fsole.bh.domain.exception.PostNotFoundException;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.port.post.PostRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -28,14 +30,26 @@ public class PostRepositoryAdapter implements PostRepository {
     public Post getPostById(Long id) {
         log.info("getPostById - fetching post");
         String url = BASE_URL + id;
-        return restTemplate.getForObject(url, Post.class);
+
+        try {
+            return restTemplate.getForObject(url, Post.class);
+        } catch (HttpClientErrorException.NotFound ex) {
+            log.error("Post with id {} not found", id);
+            throw new PostNotFoundException(id);
+        }
     }
 
     @Override
     public void deletePostById(Long id) {
         log.info("deletePostById - deleting post");
         String url = BASE_URL + id;
-        restTemplate.delete(url, Post.class);
+
+        try {
+            restTemplate.delete(url, Post.class);
+        } catch (HttpClientErrorException.NotFound ex) {
+            log.error("Post with id {} not found", id);
+            throw new PostNotFoundException(id);
+        }
         log.info("deletePostById - post deleted successfully");
     }
 }

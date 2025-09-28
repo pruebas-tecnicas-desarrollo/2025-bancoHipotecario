@@ -1,11 +1,13 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
+import com.fsole.bh.domain.exception.UserNotFoundException;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.model.User;
 import com.fsole.bh.domain.port.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
+import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -29,6 +31,12 @@ public class UserRepositoryAdapter implements UserRepository {
     public User getUserById(Long id) {
         log.info("getUserById - fetching user id '{}'", id);
         String url = BASE_URL + id;
-        return restTemplate.getForObject(url, User.class);
+
+        try {
+            return restTemplate.getForObject(url, User.class);
+        } catch (HttpClientErrorException.NotFound ex) {
+            log.error("User with id {} not found", id);
+            throw new UserNotFoundException(id);
+        }
     }
 }
