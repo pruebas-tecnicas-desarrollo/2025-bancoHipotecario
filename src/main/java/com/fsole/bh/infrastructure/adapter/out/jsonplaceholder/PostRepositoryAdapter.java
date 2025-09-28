@@ -1,7 +1,7 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
 import com.fsole.bh.domain.exception.ExternalServiceTimeoutException;
-import com.fsole.bh.domain.exception.PostNotFoundException;
+import com.fsole.bh.domain.exception.NotFoundException;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.port.post.PostRepository;
 import lombok.RequiredArgsConstructor;
@@ -49,8 +49,9 @@ public class PostRepositoryAdapter implements PostRepository {
             log.debug("getPostById - the required post was fetched successfully");
             return post;
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("getPostById - the required post was not found");
-            throw new PostNotFoundException(id);
+            String error = "the required post was not found";
+            log.error("getPostById - {}", error);
+            throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
             log.error("getPostById - timeout while trying to fetch the required post");
             throw new ExternalServiceTimeoutException(url);
@@ -67,8 +68,9 @@ public class PostRepositoryAdapter implements PostRepository {
             restTemplate.delete(url, Post.class);
             log.debug("deletePostById - the required post was deleted successfully");
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("deletePostById - the required post was not found");
-            throw new PostNotFoundException(id);
+            String error = "the required post was not found";
+            log.error("deletePostById - {}", error);
+            throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
             log.error("deletePostById - timeout while trying to delete the required post");
             throw new ExternalServiceTimeoutException(url);

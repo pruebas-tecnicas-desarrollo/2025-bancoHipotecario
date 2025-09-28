@@ -1,8 +1,7 @@
 package com.fsole.bh.infrastructure.adapter.out.jsonplaceholder;
 
 import com.fsole.bh.domain.exception.ExternalServiceTimeoutException;
-import com.fsole.bh.domain.exception.UserNotFoundException;
-import com.fsole.bh.domain.model.Post;
+import com.fsole.bh.domain.exception.NotFoundException;
 import com.fsole.bh.domain.model.User;
 import com.fsole.bh.domain.port.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -46,8 +45,10 @@ public class UserRepositoryAdapter implements UserRepository {
             log.debug("getUserById - the required user was fetched successfully");
             return user;
         } catch (HttpClientErrorException.NotFound ex) {
-            log.error("getUserById - the required user was not found");
-            throw new UserNotFoundException(id);
+            // this should never happen since userId comes from the post author, but added for safety
+            String error = "the required user was not found";
+            log.error("getUserById - {}", error);
+            throw new NotFoundException(error);
         } catch (ResourceAccessException ex) {
             log.error("getUserById - timeout while trying to fetch the required user");
             throw new ExternalServiceTimeoutException(url);
