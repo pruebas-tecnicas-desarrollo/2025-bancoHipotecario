@@ -8,6 +8,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.Caching;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.ResourceAccessException;
@@ -59,7 +60,11 @@ public class PostRepositoryAdapter implements PostRepository {
     }
 
     @Override
-    @CacheEvict(value = "posts", key = "#id")
+    @Caching(evict = {
+            @CacheEvict(value = "posts", key = "#id", beforeInvocation = true),
+            // this forces fetching fresh data on the next getAllPosts call, preventing inconsistencies
+            @CacheEvict(value = "posts", key = "'all'", beforeInvocation = true)
+    })
     public void deletePostById(Long id) {
         log.info("trying to delete post...");
         String url = BASE_URL + id;
