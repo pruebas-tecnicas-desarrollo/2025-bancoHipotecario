@@ -1,6 +1,6 @@
 package com.fsole.bh.application.service;
 
-import com.fsole.bh.domain.exception.InvalidRequestException;
+import com.fsole.bh.application.util.PostValidationUtil;
 import com.fsole.bh.domain.model.Comment;
 import com.fsole.bh.domain.model.Post;
 import com.fsole.bh.domain.model.User;
@@ -41,11 +41,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public Post getPostById(Long id) {
-        if (id <= 0) {
-            log.warn("getPostById - invalid id received: {}", id);
-            throw new InvalidRequestException();
-        }
-        log.info("getPostById - going to repository adapter to fetch post, its author and comments...");
+        PostValidationUtil.validateId(id);
+
         log.debug("going to post repository adapter to fetch post...");
         Post post = postRepository.getPostById(id);
 
@@ -61,11 +58,8 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void deletePostById(Long id) {
-        if (id <= 0) {
-            log.warn("deletePostById - invalid id received: {}", id);
-            throw new InvalidRequestException();
-        }
-        log.info("deletePostById - going to repository adapter to delete post...");
+        PostValidationUtil.validateId(id);
+
         log.debug("going to post repository adapter to delete post...");
         postRepository.deletePostById(id);
     }
