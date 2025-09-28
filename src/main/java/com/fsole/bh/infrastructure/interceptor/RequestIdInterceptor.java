@@ -18,7 +18,6 @@ public class RequestIdInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) {
         String requestId = LocalDateTime.now().format(FORMATTER);
         MDC.put("requestId", requestId);
-        request.setAttribute("requestId", requestId);
         response.setHeader("X-Request-Id", requestId);
         return true;
     }
