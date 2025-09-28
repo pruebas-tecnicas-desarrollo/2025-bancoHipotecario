@@ -23,14 +23,14 @@ public class CommentRepositoryAdapter implements CommentRepository {
     @Override
     @Cacheable(value = "comments", key = "'all'")
     public List<Comment> getAllComments() {
-        log.info("getAllComments - fetching all comments in all posts...");
+        log.info("trying to fetch all comments in all posts...");
 
         try{
             Comment[] comments = restTemplate.getForObject(BASE_URL, Comment[].class);
-            log.debug("getAllComments - all comments in all posts were fetched successfully");
+            log.debug("all comments in all posts were fetched successfully");
             return Arrays.asList(comments);
         } catch (ResourceAccessException ex) {
-            log.error("getAllComments - timeout while trying to fetch all comments in all posts");
+            log.error("timeout while trying to fetch all comments in all posts");
             throw new ExternalServiceTimeoutException(BASE_URL);
         }
     }
@@ -38,15 +38,15 @@ public class CommentRepositoryAdapter implements CommentRepository {
     @Override
     @Cacheable(value = "comments", key = "#postId")
     public List<Comment> getAllCommentsByPostId(Long postId) {
-        log.info("getAllCommentsByPostId - fetching all comments in post id '{}'...", postId);
+        log.info("trying to fetch all comments in post id '{}'...", postId);
         String url = BASE_URL + "?postId=" + postId;
 
         try{
             Comment[] comments = restTemplate.getForObject(url, Comment[].class);
-            log.debug("getAllCommentsByPostId - all comments in this post were fetched successfully");
+            log.debug("all comments in this post were fetched successfully");
             return Arrays.asList(comments);
         } catch (ResourceAccessException ex) {
-            log.error("getAllCommentsByPostId - timeout while trying to fetch all comments in this post");
+            log.error("timeout while trying to fetch all comments in this post");
             throw new ExternalServiceTimeoutException(BASE_URL);
         }
     }
