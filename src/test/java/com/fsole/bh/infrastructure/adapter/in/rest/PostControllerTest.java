@@ -47,4 +47,16 @@ class PostControllerTest {
         mockMvc.perform(delete("/posts/1"))
                 .andExpect(status().isNoContent());
     }
+
+    @Test
+    void shouldThrowNotFoundException() throws Exception {
+        mockMvc.perform(get("/posts/1999"))
+                .andExpect(status().isNotFound());
+    }
+
+    @Test
+    void shouldThrowInvalidRequestException() throws Exception {
+        mockMvc.perform(get("/posts/-1"))
+                .andExpect(status().isBadRequest());
+    }
 }
